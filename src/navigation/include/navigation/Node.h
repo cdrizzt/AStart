@@ -10,9 +10,13 @@
 #define _NODE_H
 /* Includes ------------------------------------------------------------------*/
 #include "ros/ros.h"
-#incldue "math.h"
+#include "math.h"
+
+
 /* Class ---------------------------------------------------------------------*/
-class _GridPoint2D{
+class _GridPoint2D
+{
+public:
     int x;      //栅格
     int y;
 
@@ -33,18 +37,21 @@ class _GridPoint2D{
         return (sqrt(pow(x-rhs.x,2)+pow(y-rhs.y,2)));
     }
 };
-class _Node{
+
+class _Node
+{
 public:
+    _Node(){};    //设置坐标
     _Node(int num,int cost);    //设置坐标
     _Node(int num,bool obs);    //设置坐标
     int GetNumber(void);        //获取指针
     bool CanVisited(void);      //未被遍历的
-    _Node *GetParent(void);     //返回父节点
-    float GetSumCost(void);     //获取总代价   依据总代价  优先遍历
-    
+    _Node* GetParent(void);     //返回父节点
+    float GetSumCost(void);     //获取总代价
+        
     void SetWeight(float data);      //设置权值
     void SetParent(_Node *Node);     //设置父节点
-    void SetSumCost(_GridPoint2D goal,flaot startDis);      //计算当前总代价
+    void SetSumCost(_GridPoint2D goal,float startDis);      //计算当前总代价
 
     bool operator==(const _Node& rhs);
     _Node& operator+=(_Node rhs);
@@ -63,8 +70,7 @@ private:
     bool isObstacle;    //障碍物
 
     static int width;   //宽度
-    static int hight    //高度
-    static _GridPoint2D 
+    static int hight;   //高度
     int number;         //地图指针
 };
 

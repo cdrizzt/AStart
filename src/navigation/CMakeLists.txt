@@ -117,12 +117,14 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include/navigation_node
+  include/navigation
   ${catkin_INCLUDE_DIRS}
 )
 
 add_executable(navigation_node 
               src/navigation_node.cpp
+              src/AStart.cpp
+              src/Node.cpp
               )
 
 target_link_libraries(navigation_node ${catkin_LIBRARIES})

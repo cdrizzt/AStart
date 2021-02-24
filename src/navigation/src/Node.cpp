@@ -8,11 +8,13 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "Node.h"
-
+int _Node::width = 0;
+int _Node::hight = 0;
+/* Function -----------------------------------------------------------------*/
 _Node::_Node(int num,int cost)
 {
     if(width==0||hight==0){
-        while(1){ROS_INFO("nodeMap size 0"); sleep(1);}
+        while(1){ROS_INFO("nodeMap size 0"); }
     }
 
     mapPoint.x = (int)(num/width);
@@ -20,15 +22,15 @@ _Node::_Node(int num,int cost)
     weight = cost;
 
     isObstacle = false;
-    isVisited = flase;
+    isVisited = false;
 }
 
 _Node::_Node(int num,bool obs)
 {
-    if(width==0||hight==0){
-        while(1){ROS_INFO("nodeMap size 0"); sleep(1);}
+     if(width==0||hight==0){
+        while(1){ROS_INFO("nodeMap size 0");}
     }
-
+    
     mapPoint.x = (int)(num/width);
     mapPoint.y = (int)(num%width);
     isObstacle = obs;
@@ -66,20 +68,31 @@ bool _Node::CanVisited(void)
     return (isVisited && isObstacle);
 }
 
-_Node _Node::*GetParent(void)
+_Node* _Node::GetParent(void)
 {
     return parent;
 }
 
 float _Node::GetSumCost(void)
 {
-    return sunCost;
+    return sumCost;
 }
 
-void _Node::SetSumCost(_GridPoint2D goal,flaot startDis)
+void _Node::SetSumCost(_GridPoint2D goal,float startDis)
 {
+    //代价 = 已走步数 + 离终点直线距离 + 当前点权重
     disFromStart += startDis;
-    sumCost = disFromStart + mapPoint.GetDisFromPoint(startDis) + weight;
+    sumCost = disFromStart + mapPoint.GetDisFromPoint(goal) + weight;
+}
+
+void _Node::SetWeight(float data)
+{
+    weight = data;
+}
+
+void _Node::SetParent(_Node *Node)
+{
+    parent = Node;
 }
 
 
