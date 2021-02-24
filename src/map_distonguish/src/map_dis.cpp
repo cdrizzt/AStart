@@ -15,7 +15,7 @@
 /* Funciton ------------------------------------------------------------------*/
 _MapDis::_MapDis(ros::NodeHandle n)
 {
-    pub_map = n.advertise<nav_msgs::OccupancyGrid>("map_dis",1);
+    pub_map = n.advertise<nav_msgs::OccupancyGrid>("map_dis",1, true);
     
     map.header.frame_id="map";
     map.header.seq=1000;
@@ -48,7 +48,10 @@ void _MapDis::DrawPointer(int x,int y,float R,nav_msgs::OccupancyGrid &map_cache
 
     for(int i=startX;i<endX;i++){
         for(int j=startY;j<endY;j++){
-            map_cache.data[i*map_cache.info.width+j]=101;
+            if(sqrt(float(pow(i-x,2))+float(pow(j-y,2))<R/0.03))
+            {
+                map_cache.data[i*map_cache.info.width+j]=101;
+            }
         }
     }
 }
@@ -97,11 +100,11 @@ bool _MapDis::LoadMap(const std::string &address)
     nav_msgs::OccupancyGrid map_cache = map;
     for(int i=0;i<map.data.size();i++)
     {
-        if(map.data[i]>65)
+        if(map.data[i]>50)
         {
             int x=0,y=0;
             MapGetPointer(i,&x,&y);   //获取坐标
-            DrawPointer(x,y,0.2,map_cache);        
+            DrawPointer(x,y,0.3,map_cache);        
         }
     }
     map = map_cache;
