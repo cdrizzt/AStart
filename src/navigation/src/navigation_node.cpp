@@ -22,7 +22,7 @@ _AStart *aStart;
 */
 void mapCallBack(const nav_msgs::OccupancyGrid::ConstPtr msg)
 {
-    aStart->WriteMap(*msg);
+    aStart->SetNodeMap(*msg);
 }
 /**
   * @brief  main
@@ -36,14 +36,16 @@ int main(int argc, char **argv)
 
     ros::NodeHandle n;  //创建句柄
 
+    ros::Rate loop_rate(1);
     aStart = new _AStart(n);
 
     ros::Subscriber sub_map = n.subscribe("/map_dis",1,&mapCallBack);    
     
-    
     while(ros::ok())
     {
-      ros::spinOnce();
+        ROS_INFO("live");
+        ros::spinOnce();
+        loop_rate.sleep();
     } 
 
     return 0;

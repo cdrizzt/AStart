@@ -19,6 +19,44 @@ class _GridPoint2D
 public:
     int x;      //栅格
     int y;
+    static int width;    //宽度 x
+    static int height;   //高度 y
+    typedef struct{
+        int x;
+        int y;
+    }_point;
+    
+    static _point origin;
+
+    _GridPoint2D(void){
+        x = 0;y = 0;
+    };
+    _GridPoint2D(int num){
+        if(num<0||num > (width)*(height)){
+            ROS_INFO("num %d",num);
+        }
+        x = -num % width + origin.x;
+        y = -num / width + origin.y;
+    };
+    _GridPoint2D(int x_,int y_){
+        int yInData = -y_ + origin.y;
+        int xInData = -x_ + origin.x;
+    };
+    static void SetOrigin(int x_,int y_){
+        origin.x = x_;
+        origin.y = y_;
+        ROS_INFO("origin x %d y%d",origin.x,origin.y);
+    };
+    static void SetOrigin(int num){
+        origin.x = num % width;
+        origin.y = num / width;
+        ROS_INFO("origin x %d y%d",origin.x,origin.y);
+    };
+    static void SetSize(int width_,int height_){
+        width = width_;
+        height = height_;
+        ROS_INFO("width %d height %d",width,height);
+    };
 
     bool operator==(const _GridPoint2D& rhs){
         return ((x==rhs.x&&y==rhs.y));
@@ -33,8 +71,24 @@ public:
         y=rhs.y;
         return *this;
     }
+
     float GetDisFromPoint(_GridPoint2D rhs){
         return (sqrt(pow(x-rhs.x,2)+pow(y-rhs.y,2)));
+    }
+    int GetNumber(void){
+        if(width*height==0){
+            return 0;
+        }
+        int yInData = -y + origin.y;
+        int xInData = -x + origin.x;
+
+        if(yInData<0){ yInData = 0;}
+        else if(yInData>height-1){ yInData = height-1;}
+    
+        if(xInData<0){ xInData = 0;}
+        else if(xInData>width-1){ xInData = width-1;}
+
+        return (yInData*width + xInData);
     }
 };
 
@@ -42,36 +96,31 @@ class _Node
 {
 public:
     _Node(){};    //设置坐标
-    _Node(int num,int cost);    //设置坐标
-    _Node(int num,bool obs);    //设置坐标
-    int GetNumber(void);        //获取指针
+    _Node(int num,int cost,bool obs);    //设置坐标
+    _Node(int x,int y);    //设置坐标
     bool CanVisited(void);      //未被遍历的
+    bool IsObstacle(void);
     _Node* GetParent(void);     //返回父节点
     float GetSumCost(void);     //获取总代价
         
-    void SetWeight(float data);      //设置权值
-    void SetParent(_Node *Node);     //设置父节点
-    void SetSumCost(_GridPoint2D goal,float startDis);      //计算当前总代价
-
     bool operator==(const _Node& rhs);
     _Node& operator+=(_Node rhs);
     _Node& operator=(_Node rhs);
-    //static
-    static void SetMapSize(int size_x,int size_y);  //设置地图大小
-private:
-    _GridPoint2D mapPoint;  //位于地图的坐标
-    _Node *parent;      //父节点  用于路径回朔
 
-    float weight;       //点的权值  距离障碍物递减
-    float disFromStart; //走过的步数
-    float sumCost;      //总代价 = 点的权值(距离障碍物的距离) + 走过的步数 + 距离终点的直线距离
+    void SetWeight(float weight);      //设置权值
+    void SetParent(_Node *Node);     //设置父节点
+    void SetSumCost(_GridPoint2D goal,float startDis);      //计算当前总代价
+    //static
+private:
+    _GridPoint2D point; //地图坐标(栅格)
+    _Node *parent;      //父节点
 
     bool isVisited;     //已路过
     bool isObstacle;    //障碍物
-
-    static int width;   //宽度
-    static int hight;   //高度
-    int number;         //地图指针
+    
+    float weight;       //点的权值  距离障碍物递减
+    float disFromStart; //走过的步数
+    float sumCost;      //总代价 = 点的权值(距离障碍物的距离) + 走过的步数 + 距离终点的直线距离
 };
 
 

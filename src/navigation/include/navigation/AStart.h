@@ -21,15 +21,17 @@ class _AStart{
 public:
     _AStart(ros::NodeHandle n);
     //task
-    bool Task();     //a* 运行任务 true->成功找到路径  false->不可达
-    void CleanStartAround(void);    //清除起始点附近的障碍
-    void GetNodeMap(void);          //获取节点地图  遍历障碍
-    void SetNodeMapWeight(void);    //设置权值地图  离障碍物越近的权值越低
-    bool AStart(void);              //开始搜索路径
+    bool Task();        //a* 运行任务 true->成功找到路径  false->不可达
+    void SetNodeMap(nav_msgs::OccupancyGrid map);  //设置权值地图
 
-    void WriteMap(nav_msgs::OccupancyGrid msg);
+    void SetObsWeight(float weight,float setpSize,int pose);   //权值递减 线性递减
+    
 private:
-    nav_msgs::OccupancyGrid map;    //ros地图
+    ros::Publisher pub_mapShow;
+    nav_msgs::OccupancyGrid mapReal;    //真实地图
+    nav_msgs::OccupancyGrid mapShow;    //权值显示地图
+
+    std::vector<_Node> mapNode;         //节点地图
 };
 
 

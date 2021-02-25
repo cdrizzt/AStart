@@ -46,9 +46,9 @@ void _MapDis::DrawPointer(int x,int y,float R,nav_msgs::OccupancyGrid &map_cache
     endX = endX>map_cache.info.height-1 ? map_cache.info.height-1:endX;
     endY = endY>map_cache.info.width-1 ? map_cache.info.width-1:endY;
 
-    for(int i=startX;i<endX;i++){
-        for(int j=startY;j<endY;j++){
-            if(sqrt(float(pow(i-x,2))+float(pow(j-y,2))<R/0.03))
+    for(int i=startX;i<=endX;i++){
+        for(int j=startY;j<=endY;j++){
+            if(sqrt(float(pow(i-x,2))+float(pow(j-y,2)))<R/0.03)
             {
                 map_cache.data[i*map_cache.info.width+j]=101;
             }
@@ -104,7 +104,7 @@ bool _MapDis::LoadMap(const std::string &address)
         {
             int x=0,y=0;
             MapGetPointer(i,&x,&y);   //获取坐标
-            DrawPointer(x,y,0.3,map_cache);        
+            DrawPointer(x,y,0.25,map_cache);        
         }
     }
     map = map_cache;
