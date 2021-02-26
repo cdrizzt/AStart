@@ -32,6 +32,9 @@ private:
     nav_msgs::OccupancyGrid mapShow;    //权值显示地图
 
     std::vector<_Node> mapNode;         //节点地图
+
+    _Node startPoint;                   //起始节点
+    _Node goalPoint;                    //目标节点
 };
 
 

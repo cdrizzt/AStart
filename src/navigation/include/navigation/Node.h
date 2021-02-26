@@ -39,18 +39,18 @@ public:
         y = -num / width + origin.y;
     };
     _GridPoint2D(int x_,int y_){
-        int yInData = -y_ + origin.y;
-        int xInData = -x_ + origin.x;
+        x = x_;
+        y = y_;
     };
     static void SetOrigin(int x_,int y_){
         origin.x = x_;
         origin.y = y_;
-        ROS_INFO("origin x %d y%d",origin.x,origin.y);
+        ROS_INFO("origin x %d y %d",origin.x,origin.y);
     };
     static void SetOrigin(int num){
         origin.x = num % width;
         origin.y = num / width;
-        ROS_INFO("origin x %d y%d",origin.x,origin.y);
+        ROS_INFO("origin x %d y %d",origin.x,origin.y);
     };
     static void SetSize(int width_,int height_){
         width = width_;
@@ -61,7 +61,7 @@ public:
     bool operator==(const _GridPoint2D& rhs){
         return ((x==rhs.x&&y==rhs.y));
     };
-    _GridPoint2D& operator+(_GridPoint2D rhs){
+    _GridPoint2D& operator+=(_GridPoint2D rhs){
         x+=rhs.x;
         y+=rhs.y;
         return *this;
@@ -105,14 +105,15 @@ public:
         
     bool operator==(const _Node& rhs);
     _Node& operator+=(_Node rhs);
-    _Node& operator=(_Node rhs);
 
     void SetWeight(float weight);      //设置权值
     void SetParent(_Node *Node);     //设置父节点
     void SetSumCost(_GridPoint2D goal,float startDis);      //计算当前总代价
-    //static
-private:
+    
+    int GetNumber(void);
     _GridPoint2D point; //地图坐标(栅格)
+private:
+    
     _Node *parent;      //父节点
 
     bool isVisited;     //已路过

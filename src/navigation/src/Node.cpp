@@ -46,18 +46,16 @@ float _Node::GetSumCost(void)
 
 bool _Node::operator==(const _Node& rhs)
 {
-
+    return (point == rhs.point);
 }
 
 _Node& _Node::operator+=(_Node rhs)
 {
-
+    point += rhs.point;
+    return *this;
 }
 
-_Node& _Node::operator=(_Node rhs)
-{
 
-}
 
 void _Node::SetWeight(float weight)
 {
@@ -72,5 +70,10 @@ void _Node::SetParent(_Node *Node)
 void _Node::SetSumCost(_GridPoint2D goal,float startDis)
 {
 
+}
+
+int _Node::GetNumber(void)
+{
+    return (point.GetNumber());
 }
 
