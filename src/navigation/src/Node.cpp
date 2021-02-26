@@ -39,6 +39,15 @@ _Node* _Node::GetParent(void)
 
 }
 
+float _Node::GetWeight(void)
+{
+    return weight;
+}
+bool _Node::GetVisited(void)
+{
+    return isVisited;
+}
+
 float _Node::GetSumCost(void)
 {
 
@@ -55,11 +64,14 @@ _Node& _Node::operator+=(_Node rhs)
     return *this;
 }
 
-
-
-void _Node::SetWeight(float weight)
+void _Node::SetWeight(float weight_)
 {
+    weight = weight_;
+}
 
+void _Node::SetVisited(bool visited_)
+{
+    isVisited = visited_;
 }
 
 void _Node::SetParent(_Node *Node)

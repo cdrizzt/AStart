@@ -24,7 +24,7 @@ public:
     bool Task();        //a* 运行任务 true->成功找到路径  false->不可达
     void SetNodeMap(nav_msgs::OccupancyGrid map);  //设置权值地图
 
-    void SetObsWeight(float weight,float setpSize,int pose);   //权值递减 线性递减
+    void SetObsWeight(float weight,float stepSize,int pose);   //权值递减 线性递减
     
 private:
     ros::Publisher pub_mapShow;

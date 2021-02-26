@@ -32,13 +32,19 @@ public:
         x = 0;y = 0;
     };
     _GridPoint2D(int num){
-        if(num<0||num > (width)*(height)){
-            ROS_INFO("num %d",num);
-        }
+        num = num < 0 ? 0 : num;
+        num = num >  (width)*(height)-1 ? (width)*(height)-1 : num;
+
         x = -num % width + origin.x;
         y = -num / width + origin.y;
     };
     _GridPoint2D(int x_,int y_){
+        y_ = (-y_ + origin.y < 0) ? origin.y : y_;
+        y_ = (-y_ + origin.y > height) ? origin.y-height : y_;
+
+        x_ = (-x_ + origin.x < 0) ? origin.x : x_;
+        x_ = (-x_ + origin.x > width) ? origin.x-height : x_;
+
         x = x_;
         y = y_;
     };
@@ -83,10 +89,10 @@ public:
         int xInData = -x + origin.x;
 
         if(yInData<0){ yInData = 0;}
-        else if(yInData>height-1){ yInData = height-1;}
+        else if(yInData>height){ yInData = height;}
     
         if(xInData<0){ xInData = 0;}
-        else if(xInData>width-1){ xInData = width-1;}
+        else if(xInData>width){ xInData = width;}
 
         return (yInData*width + xInData);
     }
@@ -102,12 +108,15 @@ public:
     bool IsObstacle(void);
     _Node* GetParent(void);     //返回父节点
     float GetSumCost(void);     //获取总代价
+    float GetWeight(void);      //获取权值
+    bool GetVisited(void);      //是否被查阅
         
     bool operator==(const _Node& rhs);
     _Node& operator+=(_Node rhs);
 
-    void SetWeight(float weight);      //设置权值
-    void SetParent(_Node *Node);     //设置父节点
+    void SetWeight(float weight_);      //设置权值
+    void SetVisited(bool visited);      //设置已被遍历
+    void SetParent(_Node *Node);        //设置父节点
     void SetSumCost(_GridPoint2D goal,float startDis);      //计算当前总代价
     
     int GetNumber(void);
