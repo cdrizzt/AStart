@@ -33,17 +33,17 @@ public:
     };
     _GridPoint2D(int num){
         num = num < 0 ? 0 : num;
-        num = num >  (width)*(height)-1 ? (width)*(height)-1 : num;
+        num = num >  (width)*(height) ? (width)*(height) : num;
 
-        x = -num % width + origin.x;
-        y = -num / width + origin.y;
+        x = num % width - origin.x;
+        y = num / width - origin.y;
     };
     _GridPoint2D(int x_,int y_){
-        y_ = (-y_ + origin.y < 0) ? origin.y : y_;
-        y_ = (-y_ + origin.y > height) ? origin.y-height : y_;
+        y_ = (y_ + origin.y < 0) ? -origin.y : y_;
+        y_ = (y_ + origin.y > height) ? height-origin.y : y_;
 
-        x_ = (-x_ + origin.x < 0) ? origin.x : x_;
-        x_ = (-x_ + origin.x > width) ? origin.x-height : x_;
+        x_ = (x_ + origin.x < 0) ? -origin.x : x_;
+        x_ = (x_ + origin.x > width) ? width-origin.x : x_;
 
         x = x_;
         y = y_;
@@ -85,8 +85,8 @@ public:
         if(width*height==0){
             return 0;
         }
-        int yInData = -y + origin.y;
-        int xInData = -x + origin.x;
+        int yInData = y + origin.y;
+        int xInData = x + origin.x;
 
         if(yInData<0){ yInData = 0;}
         else if(yInData>height){ yInData = height;}
