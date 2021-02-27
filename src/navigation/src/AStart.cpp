@@ -155,9 +155,10 @@ bool _AStart::Task(void)
                 tmpNode.SetParent(&curPointer);
                 
                 _Node& pointer = mapNodeCache[tmpNode.GetNumber()];
-                mapShow.data[tmpNode.GetNumber()] = 101;
+             
                 pointer = tmpNode;
-                
+
+                mapShow.data[tmpNode.GetNumber()] = 101;   
                 seachQueue.push(&pointer);
             }
         }
