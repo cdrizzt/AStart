@@ -10,8 +10,8 @@
 #include "AStart.h"
 
 /* Define -------------------------------------------------------------------*/
-#define WEIGHT_START        (10.0)
-#define WEIGHT_STEP_SIZE    (1.0)
+#define WEIGHT_START        (5.0)
+#define WEIGHT_STEP_SIZE    (0.4)
 
 /* Function -----------------------------------------------------------------*/
 _AStart::_AStart(ros::NodeHandle n)
@@ -65,7 +65,7 @@ void _AStart::SetObsWeight(float weight,float stepSize,int pose)
                 if(grade > mapNode[number].GetWeight())
                 {
                     mapNode[number].SetWeight(grade);
-                    mapShow.data[number] = -(grade*12);
+                    mapShow.data[number] = -(grade*5);
                     
                 }
             }
@@ -90,6 +90,7 @@ void _AStart::SetGoalPoint(geometry_msgs::PoseStamped goal)
 
 bool _AStart::Task(void)
 {
+    ROS_INFO("start");
     mapNodeCache = mapNode;
 
     //清空起始点与目标点附近的障碍信息
@@ -112,13 +113,14 @@ bool _AStart::Task(void)
                  v4(0,-1) ,         v5(0,1),\
                  v6(1,-1) ,v7(1,0) ,v8(1,1);
 
-    std::vector<_Node>motion = {_Node(v1,sqrt(2)),
+    std::vector<_Node>motion = {
                                 _Node(v2,1),
-                                _Node(v3,sqrt(2)),
                                 _Node(v4,1),
                                 _Node(v5,1),
-                                _Node(v6,sqrt(2)),
                                 _Node(v7,1),
+                                _Node(v3,sqrt(2)),
+                                _Node(v1,sqrt(2)),
+                                _Node(v6,sqrt(2)),
                                 _Node(v8,sqrt(2)),
                                 };
 
@@ -140,12 +142,12 @@ bool _AStart::Task(void)
             pose += motion[i];                   //获取当前需要计算的指针
 
             _Node tmpNode = mapNodeCache[pose.GetNumber()];
-            tmpNode.SetDisFromStart(pose.GetDisFromStart());
+            tmpNode.SetDisFromStart(pose.GetDisFromStart()+1*tmpNode.GetWeight());
     
             if(tmpNode.CanVisited())
             {
                 //计算权值
-                float cost = 5*tmpNode.GetWeight() + tmpNode.GetDisFromStart() + tmpNode.point.GetDisFromPoint(goalPoint.point);
+                float cost = 0*tmpNode.GetWeight() + tmpNode.GetDisFromStart() + 0.4*tmpNode.point.GetDisFromPoint(goalPoint.point);
 
                 //写入权值
                 tmpNode.SetSumCost(cost);
@@ -168,8 +170,10 @@ bool _AStart::Task(void)
         successGoalPoint = successGoalPoint->GetParent();
     }
 
+    ROS_INFO("end");
     mapShow.header.stamp=ros::Time::now();
     pub_mapShow.publish(mapShow);
+
 }
 
 void _AStart::CleanPointAround(std::vector<_Node>& map,_Node point,int step)
