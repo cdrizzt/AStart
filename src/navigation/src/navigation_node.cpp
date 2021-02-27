@@ -24,6 +24,11 @@ void mapCallBack(const nav_msgs::OccupancyGrid::ConstPtr msg)
 {
     aStart->SetNodeMap(*msg);
 }
+
+void SetGoalPoint(geometry_msgs::PoseStampedPtr ptrGoal)
+{
+  aStart->SetGoalPoint(*ptrGoal);
+}
 /**
   * @brief  main
   * @note	main
@@ -39,7 +44,8 @@ int main(int argc, char **argv)
     ros::Rate loop_rate(1);
     aStart = new _AStart(n);
 
-    ros::Subscriber sub_map = n.subscribe("/map_dis",1,&mapCallBack);    
+    ros::Subscriber sub_map  = n.subscribe("/map_dis",1,&mapCallBack);    
+    ros::Subscriber sub_goal = n.subscribe("/move_base_simple/goal",10,&SetGoalPoint);   
     
     while(ros::ok())
     {

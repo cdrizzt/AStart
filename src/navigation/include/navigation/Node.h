@@ -102,22 +102,26 @@ class _Node
 {
 public:
     _Node(){};    //设置坐标
-    _Node(int num,int cost,bool obs);    //设置坐标
+    _Node(int num,int cost,bool obs,bool visited);    //设置坐标
+    _Node(_GridPoint2D pointInput,float cost);             //设置坐标 与 代价
     _Node(int x,int y);    //设置坐标
     bool CanVisited(void);      //未被遍历的
-    bool IsObstacle(void);
+    bool IsObstacle(void);      //
     _Node* GetParent(void);     //返回父节点
     float GetSumCost(void);     //获取总代价
     float GetWeight(void);      //获取权值
-    bool GetVisited(void);      //是否被查阅
+    float GetDisFromStart(void);//获取起始代价
+    bool IsVisited(void);       //是否被查阅
         
     bool operator==(const _Node& rhs);
     _Node& operator+=(_Node rhs);
 
+    void SetDisFromStart(float dis);    //设置距离
     void SetWeight(float weight_);      //设置权值
+    void SetObstacle(bool obs);         //设置障碍
     void SetVisited(bool visited);      //设置已被遍历
     void SetParent(_Node *Node);        //设置父节点
-    void SetSumCost(_GridPoint2D goal,float startDis);      //计算当前总代价
+    void SetSumCost(float cost);      //计算当前总代价
     
     int GetNumber(void);
     _GridPoint2D point; //地图坐标(栅格)
