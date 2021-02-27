@@ -61,12 +61,17 @@ void _AStart::SetObsWeight(float weight,float stepSize,int pose)
             int number = _GridPoint2D(origin.x+x,origin.y+y).GetNumber();
             if(mapNode[number].IsObstacle()==false)
             {
-                float grade = weight / (sqrt(float(pow(x,2))+float(pow(y,2))) * stepSize);
-                if(grade > mapNode[number].GetWeight())
+                //float grade = weight / (sqrt(float(pow(x,2))+float(pow(y,2))) * stepSize);
+                float dis = sqrt(float(pow(x,2))+float(pow(y,2)));
+                if(dis<stepDis-1)
                 {
-                    mapNode[number].SetWeight(grade);
-                    mapShow.data[number] = -(grade*5);
-                    
+                    float grade = (stepDis-dis) * stepSize;
+                    if(grade > mapNode[number].GetWeight())
+                    {
+                        mapNode[number].SetWeight(grade);
+                        mapShow.data[number] = -(grade*8);
+                        
+                    }
                 }
             }
         }
